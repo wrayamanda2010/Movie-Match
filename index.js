@@ -17,10 +17,8 @@
 
 
 function updateCard(increment, url, array){
-  // let cards = $(".card")
-  // console.log(cards[increment]
-  // $(cards[increment]).html(`<img class="poster" src="${url}">`)
-  $("#card-deck").append(`<li class="card" type=${array}> <img class"hidden" src="${url}"></li>`)
+
+  $("#card-deck").append(`<li class="card" type=${array}> <img class="hidden" src="${url}"></li>`)
 
 }
 
@@ -30,7 +28,7 @@ setTimeout(function(){
 // cards array holds all cards
 let card = $('.card');
 let cards = [...card]
-console.log(cards)
+
 
 // deck of all cards in game
 const deck = $(".deck");
@@ -91,7 +89,7 @@ function startGame(){
             deck.append(item);
         });
         cards[i].classList.remove("show", "open", "match", "disabled");
-    }
+      }
     // reset moves
     moves = 0;
     counter.innerHTML = moves;
@@ -112,7 +110,8 @@ function startGame(){
 
 // @description toggles open and show class to display cards
 var displayCard = function (){
-  $(this).find('img').toggle("hidden")
+  let image = $(this).children()[0]
+    image.classList.toggle("hidden")
     this.classList.toggle("open");
     this.classList.toggle("show");
     this.classList.toggle("disabled");
@@ -152,6 +151,10 @@ function unmatched(){
     setTimeout(function(){
         openedCards[0].classList.remove("show", "open", "no-event","unmatched");
         openedCards[1].classList.remove("show", "open", "no-event","unmatched");
+        let image = $(openedCards[0]).children()[0]
+          image.classList.toggle("hidden")
+          image = $(openedCards[1]).children()[0]
+          image.classList.toggle("hidden")
         enable();
         openedCards = [];
     },1100);
