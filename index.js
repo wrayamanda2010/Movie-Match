@@ -1,11 +1,16 @@
+$(document).ready(function(){
+
 //API call to get poster images from OMBD
 
   let disney = ['frozen', 'moana', 'mulan', 'aladdin', 'bambi', 'beauty-and-the-beast', 'lion-king', 'hercules']
-  // let sciFi = ['avatar', 'looper', 'inception', 'the matrix', 'jurassic park', 'back to the future', 'minority report', 'donnie darko']
-  // let horror = ['the shining', 'the conjuring', 'it', 'halloween', 'psycho', 'a nightmare on elm street', 'scream', 'jaws']
+  let sciFi = ['avatar', 'looper', 'inception', 'the-matrix', 'jurassic-park', 'back-to-the-future', 'minority-report', 'donnie-darko']
+  let horror = ['the-shining', 'the-conjuring', 'it', 'halloween', 'psycho', 'a-nightmare-on-elm-street', 'scream', 'jaws']
+  let harryPotter = ['harry-potter-and-the-Sorcerer\'s-stone', 'harry-potter-and-the-chamber-of-secrets', 'harry-potter-and-the-prisoner-of-Azkaban', 'harry-potter-and-the-goblet-of-fire', 'harry-potter-and-the-order-of-the-phoenix', 'harry-potter-and-the-half-blood-prince', 'harry-potter-and-the-deathly-hallows-part-1', 'harry-potter-and-the-deathly-hallows-part-2']
+  let comedy = ['super-bad', 'old-school', 'the-hangover', 'american-pie', 'bridesmaids', 'monty-python-and-the-holy-grail', 'grandms\'s-boy', 'clueless']
+  let comics = ['deadpool', 'guardians-of-the-galaxy', 'avengers', 'hellboy', 'blade', 'kick-ass', 'the-crow', 'suicide-squad']
+
 
   for(var i = 0; i < disney.length; i++){
-
     (function(i) {
       $.getJSON('http://www.omdbapi.com/?apikey=966e7722&t=' + disney[i],
         (data) => {
@@ -13,16 +18,17 @@
           updateCard(i, data["Poster"],disney[i])
         })
     })(i)
-}
+  }
 
 
-function updateCard(increment, url, array){
+  function updateCard(increment, url, array){
 
-  $("#card-deck").append(`<li class="card" type=${array}> <img class="hidden" src="${url}"></li>`)
+    $("#card-deck").append(`<li class="card" type=${array}> <img class="hidden" src="${url}"></li>`)
 
-}
-
-
+  }
+  let lowestScore = 50;
+  localStorage.setItem("highScore", JSON.stringify(lowestScore))
+})
 setTimeout(function(){
 
 // cards array holds all cards
@@ -50,7 +56,13 @@ let matchedCard = document.getElementsByClassName("match");
  let closeicon = document.querySelector(".close");
 
  // declare modal
- let modal = document.getElementById("popup1")
+ let modal = document.getElementById("popup1");
+
+ //declare restart
+let restart = document.getElementById("restart");
+
+//delare playagain button on modal
+let playAgainButton = document.getElementById("play-again");
 
  // array for opened cards
 var openedCards = [];
@@ -84,11 +96,14 @@ function startGame(){
     cards = shuffle(cards);
     // remove all exisiting classes from each card
     for (var i = 0; i < cards.length; i++){
+      let image = $(cards[i]).children()[0]
+
         deck.innerHTML = "";
         [].forEach.call(cards, function(item) {
             deck.append(item);
         });
         cards[i].classList.remove("show", "open", "match", "disabled");
+        image.classList.add("hidden")
       }
     // reset moves
     moves = 0;
@@ -246,6 +261,10 @@ function congratulations(){
         document.getElementById("starRating").innerHTML = starRating;
         document.getElementById("totalTime").innerHTML = finalTime;
 
+        if(moves < getHighScore()){
+          highScore(moves)
+          alert("New High Score")
+        }
         //closeicon on modal
         closeModal();
     };
@@ -255,6 +274,12 @@ function congratulations(){
 // @description close icon on modal
 function closeModal(){
     closeicon.addEventListener("click", function(e){
+        e.preventDefault();
+        modal.classList.remove("show");
+        startGame();
+    });
+    playAgainButton.addEventListener("click", function(e){
+      e.preventDefault();
         modal.classList.remove("show");
         startGame();
     });
@@ -269,7 +294,13 @@ function playAgain(){
     startGame();
 }
 
+function highScore(score){
+    localStorage.setItem("highScore", JSON.stringify(score))
+}
 
+function getHighScore(){
+  return JSON.parse(localStorage.getItem("highScore"))
+}
 // loop to add event listeners to each card
 for (var i = 0; i < cards.length; i++){
     card = cards[i];
@@ -277,5 +308,6 @@ for (var i = 0; i < cards.length; i++){
     card.addEventListener("click", cardOpen);
     card.addEventListener("click",congratulations);
 };
+
 
 }, 200)
