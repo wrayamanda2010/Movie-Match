@@ -14,12 +14,12 @@ $(document).ready(function() {
   let comics = ['deadpool', 'guardians-of-the-galaxy', 'avengers', 'hellboy', 'blade', 'kick-ass', 'the-crow', 'suicide-squad']
 
 
-  for (var i = 0; i < disney.length; i++) {
+  for (var i = 0; i < sciFi.length; i++) {
     (function(i) {
-      $.getJSON('http://www.omdbapi.com/?apikey=966e7722&t=' + disney[i],
+      $.getJSON('http://www.omdbapi.com/?apikey=966e7722&t=' + sciFi[i],
         (data) => {
-          updateCard(i, data["Poster"], disney[i])
-          updateCard(i, data["Poster"], disney[i])
+          updateCard(i, data["Poster"], sciFi[i])
+          updateCard(i, data["Poster"], sciFi[i])
         })
     })(i)
   }
@@ -271,4 +271,4 @@ setTimeout(function() {
   };
 
 
-}, 200)
+}, 500)
